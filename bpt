@@ -32,7 +32,6 @@ else
     TIME=$BREAK
 fi
 
-caffeinate -t $TIME
 for (( i = $TIME; i >= 0; i-- )); do
 
     MINUTES=$[$i/60]
