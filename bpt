@@ -18,45 +18,46 @@ SOUND="/Users/alexstriff/Library/Sounds/Pomodoro.aif"
 # Display countdown.
 function countdown() {
 
-    TYPE=""
-    TIME=0
-    ALERT=false
+TYPE=""
+TIME=0
+ALERT=false
 
-    if [[ $[$POM % 2] == 1 ]]; then
-        TYPE="Work"
-        TIME=$WORK
-        COUNT=$[$POM/2]
+if [[ $[$POM % 2] == 1 ]]; then
+    TYPE="Work"
+    TIME=$WORK
+    COUNT=$[$POM/2]
 
-    else
-        TYPE="Break"
-        TIME=$BREAK
-    fi
+else
+    TYPE="Break"
+    TIME=$BREAK
+fi
 
-    for (( i = $TIME; i >= 0; i-- )); do
+caffeinate -t $TIME
+for (( i = $TIME; i >= 0; i-- )); do
 
-        MINUTES=$[$i/60]
-        SECONDS=$[$i%60]
+    MINUTES=$[$i/60]
+    SECONDS=$[$i%60]
 
-        printf "\t[%02d]\t\t[%02d:%02d]\t\t[%s]\r"\
-            $COUNT $MINUTES $SECONDS $TYPE
-        sleep 1
+    printf "\t[%02d]\t\t[%02d:%02d]\t\t[%s]\r"\
+        $COUNT $MINUTES $SECONDS $TYPE
+    sleep 1
 
-    done
+done
 
 }
 
 # Visual alert and audio plays.
 function play_sound() {
 
-    echo 
-    afplay $SOUND
+echo 
+afplay $SOUND
 
 }
 
 # Launch messages.
 function print_info() {
 
-    echo "Running 'bpt.sh':"
+echo "Running 'bpt.sh':"
 echo "->->->->->->->->->->->->->->->->->->->->->->->->->->->"
 
 printf "\tWORK:\t\t%03d seconds\t(%02d minutes).\n"\
