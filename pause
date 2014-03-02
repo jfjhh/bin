@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SAVED_TTY=$(stty -g)
+
+function p_fun() {
+	echo -n "Press any key to continue ... "
+	stty raw
+	dd if="/dev/tty" of="/dev/null" count="1" 2> /dev/null
+	stty "$SAVED_TTY"
+}
+
+if [[ "$1" == "-r" ]]; then
+	p_fun
+	echo -ne "\r                              \r" # Clears the message.
+else
+	p_fun
+	echo # Newline.
+fi
+
