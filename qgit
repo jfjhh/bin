@@ -1,7 +1,11 @@
 #!/bin/bash
+# qgit
 
 if [ -d ".git" ]; then
+    echo "AUTO-COMMIT '$1'."
     git add "$1"
     git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)."
+else
+    echo "NOT A GIT REPOSITOY."
 fi
 
