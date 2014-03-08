@@ -56,7 +56,7 @@ afplay $SOUND
 # Launch messages.
 function print_info() {
 
-echo "Running 'bpt.sh':"
+echo "Running 'bpt.sh': Started at '`date +"%T"`'."
 echo "->->->->->->->->->->->->->->->->->->->->->->->->->->->"
 
 printf "\tWORK:\t\t%03d seconds\t(%02d minutes).\n"\
