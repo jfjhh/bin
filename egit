@@ -1,5 +1,6 @@
 #!/bin/bash
 # egit
+# commits a file with a message, like a git add-commit 'file' 'message'.
 
 if [ -d ".git" ]; then
     echo "EXPLICIT-COMMIT '$1'."
