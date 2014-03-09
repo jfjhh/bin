@@ -8,11 +8,29 @@
 #
 
 
+# Variables.
 POM=0
-WORK=900 # 15 minutes.
-BREAK=300 # 5 minutes.
+WORK=0
+BREAK=0
 
 SOUND="/Users/alexstriff/Library/Sounds/Pomodoro.aif"
+
+
+# Arg variable assignments.
+if [[ "$1" == "-w" ]]; then
+    WORK=$2
+
+elif [[ "$1" == "-b" ]]; then
+    BREAK=$2
+
+elif [[ "$1" == "-wb" ]]; then
+    WORK=$2
+    BREAK=$3
+
+else
+    WORK=900 # 15 minutes.
+    BREAK=300 # 5 minutes.
+fi 
 
 
 # Display countdown.
