@@ -48,7 +48,7 @@ done
 # Visual alert and audio plays.
 function play_sound() {
 
-echo 
+echo -n 
 afplay $SOUND
 
 }
