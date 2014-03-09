@@ -19,8 +19,10 @@ SOUND="/Users/alexstriff/Library/Sounds/Pomodoro.aif"
 # Arg variable assignments.
 if [[ "$1" == "-w" ]]; then
     WORK=$2
+    BREAK=300 # 5 minutes.
 
 elif [[ "$1" == "-b" ]]; then
+    WORK=900 # 15 minutes.
     BREAK=$2
 
 elif [[ "$1" == "-wb" ]]; then
