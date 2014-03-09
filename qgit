@@ -6,6 +6,6 @@ if [ -d ".git" ]; then
     git add "$1"
     git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)."
 else
-    echo "NOT A GIT REPOSITOY."
+    echo "NOT A GIT REPOSITORY."
 fi
 
