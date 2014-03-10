@@ -57,7 +57,7 @@ for (( i = $TIME; i >= 0; i-- )); do
     MINUTES=$[$i/60]
     SECONDS=$[$i%60]
 
-    printf "\t[%02d]\t\t[%02d:%02d]\t\t[%s]\r"\
+    printf "\t[%02d]\t\t\033[0;7m[%02d:%02d]\033[0m\t\t[%s]\r"\
         $COUNT $MINUTES $SECONDS $TYPE
     sleep 1
 
