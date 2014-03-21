@@ -1,17 +1,29 @@
 #!/bin/bash
+#
 # qgit
 # Easy committing from Vim.
 #
-# Takes $1 that is the commit message.
+# Takes $1 that is the filename.
+# Takes $2 that is the commit message.
+#
 # Runs `git` commands silently.
-# 
+#
 
-echo "AUTO-COMMITTED '$1'."
+COMMIT_MESSAGE=""
+
+if [[ "$2" == "" ]]; then
+    COMMIT_MESSAGE="Wrote $1 (`date "+%m-%d-%y/%T"`)."
+
+else
+    COMMIT_MESSAGE="$2"
+fi
+
 git add "$1" 2>&1 > /dev/null
 git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)." 2>&1 > /dev/null
 
 if [[ $? == 0 ]]; then
     echo "AUTO-COMMITTED '$1'."
+
 else
     echo "NOT A GIT REPOSITORY. - '$1'"
 fi
