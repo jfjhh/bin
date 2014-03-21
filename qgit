@@ -22,7 +22,7 @@ git add "$1" 2>&1 > /dev/null
 git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)." 2>&1 > /dev/null
 
 if [[ $? == 0 ]]; then
-    echo "AUTO-COMMITTED '$1'."
+    echo "AUTO-COMMITTED '$1' with commit message '$COMMIT_MESSAGE'."
 
 else
     echo "NOT A GIT REPOSITORY. - '$1'"
