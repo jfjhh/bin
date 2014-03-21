@@ -1,11 +1,18 @@
 #!/bin/bash
 # qgit
+# Easy committing from Vim.
+#
+# Takes $1 that is the commit message.
+# Runs `git` commands silently.
+# 
 
-if [ -d ".git" ]; then
-    echo "AUTO-COMMIT '$1'."
-    git add "$1"
-    git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)."
+echo "AUTO-COMMITTED '$1'."
+git add "$1" 2>&1 > /dev/null
+git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)." 2>&1 > /dev/null
+
+if [[ $? == 0 ]]; then
+    echo "AUTO-COMMITTED '$1'."
 else
-    echo "NOT A GIT REPOSITORY."
+    echo "NOT A GIT REPOSITORY. - '$1'"
 fi
 
