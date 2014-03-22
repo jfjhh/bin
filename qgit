@@ -18,8 +18,9 @@ else
     COMMIT_MESSAGE="$2"
 fi
 
+# Make silent by redirecting STDOUT and STDERR to /dev/null.
 git add "$1" 2>&1 > /dev/null
-git commit -m "Wrote $1 (`date "+%m-%d-%y/%T"`)." 2>&1 > /dev/null
+git commit -m "$COMMIT_MESSAGE" 2>&1 > /dev/null
 
 if [[ $? == 0 ]]; then
     echo "AUTO-COMMITTED '$1' with commit message '$COMMIT_MESSAGE'."
