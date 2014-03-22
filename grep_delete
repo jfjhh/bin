@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# grep_delete.sh
+# Deletes all lines with any of the strings in $2 from the file $1.
+#
+# For example:
+# `grep_delete delfile.txt 'del1|del2|del3'`
+#
+# $1 is filename.
+# $2 is regex string(s).
+#
+
+if [[ $# -eq 2 ]]; then
+
+grep -Ev $2 > tmp.txt
+cat tmp.txt > $1
+rm tmp
+
+else
+
+cat <<-USEAGE
+
+Useage:
+grep_delete
+[-h, --help]   			  -- print this useage info.
+<filename> <'regex|strings|here'> -- Deletes all lines in <filename> containing any of the <regex strings>
+
+USEAGE
+
+fi
+
