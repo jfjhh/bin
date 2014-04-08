@@ -1,0 +1,40 @@
+#!/bin/bash
+# Will be run as root.
+
+# Allow time to connect to wireless first.
+sleep 5
+
+# Update
+if [[ "$1" == "no-update" || "$2" == "no-update" ]]; then
+    echo "UPDATE SKIPPED"
+else
+    gem update
+    brew update
+    echo "UPDATE DONE"
+fi
+
+# Backup
+if [[ "$1" == "no-backup" || "$2" == "no-backup" ]]; then
+    echo "BACKUP SKIPPED"
+else
+    BDIR="/Users/alexstriff/backup"
+
+    echo "#=== MAIL BACKUP ON `date` ===#" >> $BDIR/mail_backup
+    cat /var/mail/alexstriff >> $BDIR/mail_backup
+    MSG=`curl -u alex.striff1@gmail.com:sept2389 --silent "https://mail.google.com/mail/feed/atom" | perl -ne 'print "\t" if /<name>/; print "$2\n" if /<(title|name)>(.*)<\/\1>/;'`
+    echo -n $MSG | sed 's/Gmail - Inbox for alex.striff1@gmail.com//g' >> $BDIR/mail_backup
+
+    echo "BACKING UP DROPBOX FILES ..."
+    tar -czvf $BDIR/dropbox-backup-on-`date +"%d-%m-%y-at-%T"`.tar.gz /Users/alexstriff/Dropbox/*
+
+    echo "BACKUP DONE"
+fi
+
+# Erase free space
+if [[ "$1" == "no-free-space" || "$2" == "no-free-space" ]]; then
+    echo "FREE SPACE SKIPPED"
+else
+    diskutil secureErase freespace 1 /dev/disk0s2
+    echo "FREE SPACE DONE"
+fi
+
