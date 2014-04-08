@@ -30,11 +30,3 @@ else
     echo "BACKUP DONE"
 fi
 
-# Erase free space
-if [[ "$1" == "no-free-space" || "$2" == "no-free-space" ]]; then
-    echo "FREE SPACE SKIPPED"
-else
-    diskutil secureErase freespace 1 /dev/disk0s2
-    echo "FREE SPACE DONE"
-fi
-
