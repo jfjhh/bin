@@ -21,6 +21,7 @@ else
 
     echo "#=== MAIL BACKUP ON `date` ===#" >> $BDIR/mail_backup
     cat /var/mail/alexstriff >> $BDIR/mail_backup
+    cat /Users/alexstriff/mbox >> $BDIR/mail_backup
     MSG=`curl -u alex.striff1@gmail.com:sept2389 --silent "https://mail.google.com/mail/feed/atom" | perl -ne 'print "\t" if /<name>/; print "$2\n" if /<(title|name)>(.*)<\/\1>/;'`
     echo -n $MSG | sed 's/Gmail - Inbox for alex.striff1@gmail.com//g' >> $BDIR/mail_backup
 
