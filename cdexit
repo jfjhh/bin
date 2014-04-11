@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DIR=`cat ~/.exit_dir`
+cd $DIR
+ls
+
