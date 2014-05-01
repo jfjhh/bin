@@ -1,8 +1,0 @@
-#!/bin/bash
-cd "$1"
-if [[ "$2" == "" ]]; then
-    ls
-else
-    ls "$2"
-fi
-
