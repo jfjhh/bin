@@ -14,7 +14,7 @@ for REPO in $REPOS; do
     printf " \033[0;34m<push_repos> \033[0;1mShort status of \033[0;1;36m$REPO\033[0m:\n"
     git status -s
 
-    printf " \033[0;34m<push_repos> \033[0;1mPushing \033[0;1;36m$REPO\033[0m...\r"
+    printf " \033[0;34m<push_repos> \033[0;1mPushing \033[0;1;36m$REPO\033[0m...\n"
     git push origin master
     printf " \033[0;34m<push_repos> \033[0;1mDone pushing \033[0;1;36m$REPO\033[0m.\n"
 done
