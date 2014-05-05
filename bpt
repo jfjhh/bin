@@ -12,8 +12,7 @@
 POM=0
 WORK=0
 BREAK=0
-
-SOUND="/Users/alexstriff/Library/Sounds/Pomodoro.aif"
+#SOUND="/Users/alexstriff/Library/Sounds/Pomodoro.aif"
 
 
 # Arg variable assignments.
@@ -65,11 +64,11 @@ done
 
 }
 
-# Visual alert and audio plays.
+# Visual alert
 function play_sound() {
 
 echo -n 
-afplay $SOUND
+#afplay $SOUND
 
 }
 
@@ -91,7 +90,7 @@ echo -e "\tPomodoros:\tTime Left:\tTimer:"
 
 
 clear
-pause -r
+pause -r # press any key to continue, then do carriage return.
 print_info
 
 for (( POM=1; POM>-1; POM++ )); do
