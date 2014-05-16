@@ -3,7 +3,7 @@
 # does a git push of all git repos
 
 RUN_DIR=`pwd`
-REPOS="/home/pi/bash /home/pi/c/sudoku_solver /home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/dotfiles /home/pi/css"
+REPOS="/home/pi/bash /home/pi/c/auto_todo /home/pi/c/sudoku_solver /home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/dotfiles /home/pi/css"
 
 printf " \033[0;34m<push_repos> \033[0;1;32mRunning push_repos with repos: \033[0;1;37m$REPOS\033[0m...\n"
 
@@ -12,11 +12,20 @@ for REPO in $REPOS; do
     cd $REPO
 
     printf " \033[0;34m<push_repos> \033[0;1mShort status of \033[0;1;36m$REPO\033[0m:\n"
-    git status -s
+    git status -s | grep ' '
 
-    printf " \033[0;34m<push_repos> \033[0;1mPushing \033[0;1;36m$REPO\033[0m...\n"
-    git push origin master
-    printf " \033[0;34m<push_repos> \033[0;1mDone pushing \033[0;1;36m$REPO\033[0m.\n"
+    if [[ "$?" == "0" ]]; then
+        printf " \033[0;34m<push_repos> \033[0;1mAdding \033[0;1;36m$REPO Contents\033[0m...\n"
+        git add -Av
+        printf " \033[0;34m<push_repos> \033[0;1mCommiting \033[0;1;36m$REPO\033[0m...\n"
+        git commit -vm "auto push_repos (`date "+%m-%d-%y/%T"`)."
+        printf " \033[0;34m<push_repos> \033[0;1mPushing \033[0;1;36m$REPO\033[0m...\n"
+        git push origin master
+        printf " \033[0;34m<push_repos> \033[0;1mDone pushing \033[0;1;36m$REPO\033[0m.\n"
+    else
+        printf " \033[0;34m<push_repos> \033[0;1mAll good for \033[0;1;36m$REPO\033[0m...\n"
+    fi
+
 done
 
 printf "\n"
