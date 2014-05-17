@@ -8,22 +8,22 @@ REPOS="/home/pi/bash /home/pi/c/auto_todo /home/pi/c/sudoku_solver /home/pi/c/ap
 printf " \033[0;34m<push_repos> \033[0;1;32mRunning push_repos with repos: \033[0;1;37m$REPOS\033[0m...\n"
 
 for REPO in $REPOS; do
-    printf " \033[0;34m<push_repos> \033[0;1mCDing to \033[0;1;36m$REPO\033[0m...\r"
+    printf " \033[0;34m<push_repos> \033[0;1mCDing to\t\033[0;1;36m$REPO\033[0m...\r"
     cd $REPO
 
-    printf " \033[0;34m<push_repos> \033[0;1mShort status of \033[0;1;36m$REPO\033[0m:\n"
+    printf " \033[0;34m<push_repos> \033[0;1mShort status of\t\033[0;1;36m$REPO\033[0m:\n"
     git status -s | grep ' '
 
     if [[ "$?" == "0" ]]; then
-        printf " \033[0;34m<push_repos> \033[0;1mAdding \033[0;1;36m$REPO Contents\033[0m...\n"
+        printf " \033[0;34m<push_repos> \033[0;1mAdding\t\033[0;1;36m$REPO Contents\033[0m...\n"
         git add -Av
-        printf " \033[0;34m<push_repos> \033[0;1mCommiting \033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[0;34m<push_repos> \033[0;1mCommiting\t\033[0;1;36m$REPO\033[0m...\n"
         git commit -vm "auto push_repos (`date "+%m-%d-%y/%T"`)."
-        printf " \033[0;34m<push_repos> \033[0;1mPushing \033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[0;34m<push_repos> \033[0;1mPushing\t\033[0;1;36m$REPO\033[0m...\n"
         git push origin master
-        printf " \033[0;34m<push_repos> \033[0;1mDone pushing \033[0;1;36m$REPO\033[0m.\n"
+        printf " \033[0;34m<push_repos> \033[0;1mDone pushing\t\033[0;1;36m$REPO\033[0m.\n"
     else
-        printf " \033[0;34m<push_repos> \033[0;1mAll good for \033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[0;34m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
     fi
 
 done
