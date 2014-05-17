@@ -2,6 +2,7 @@
 # ~/bash/push_repos
 # does a git push of all git repos
 
+PUSHED=0
 RUN_DIR=`pwd`
 REPOS="/home/pi/bash /home/pi/c/auto_todo /home/pi/c/sudoku_solver /home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/dotfiles /home/pi/css"
 
@@ -31,6 +32,7 @@ for REPO in $REPOS; do
         git push -v --tags origin master
         printf "\033[0m"
         printf " \033[34m<push_repos> \033[0;1mDone pushing\t\033[0;1;36m$REPO\033[0m.\n"
+        PUSHED=1
     else
         printf " \033[34m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
     fi
@@ -41,4 +43,5 @@ printf "\n"
 printf " \033[34m<push_repos> \033[0;32mDONE running push_repos\033[0m...\n"
 
 cd $RUN_DIR
+return $PUSHED # returns 1 if pushed any repos
 
