@@ -5,37 +5,37 @@
 RUN_DIR=`pwd`
 REPOS="/home/pi/bash /home/pi/c/auto_todo /home/pi/c/sudoku_solver /home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/dotfiles /home/pi/css"
 
-printf " \033[0;34m<push_repos> \033[0;1;32mRunning push_repos with repos: \033[0;1;37m$REPOS\033[0m...\n"
+printf " \033[0;32m<push_repos> \033[0;1;32mRunning push_repos with repos: \033[0;1;37m$REPOS\033[0m...\n"
 
 for REPO in $REPOS; do
-    printf " \033[34m<push_repos> \033[0;1mCDing to\t\t\033[0;1;36m$REPO\033[0m...\n"
+    printf " \033[32m<push_repos> \033[0;1mCDing to\t\t\033[0;1;36m$REPO\033[0m...\n"
     cd $REPO
 
-    printf " \033[34m<push_repos> \033[0;1mShort status of\t\033[0;1;36m$REPO\033[0m:\n"
+    printf " \033[32m<push_repos> \033[0;1mShort status of\t\033[0;1;36m$REPO\033[0m:\n"
     printf "\033[31m"
     git status -s | grep ' '
     STATUS="$?"
     printf "\033[0m"
 
     if [[ "$STATUS" == "0" ]]; then
-        printf " \033[34m<push_repos> \033[0;1mAdding\t\t\033[0;1;36m$REPO Contents\033[0m...\n"
+        printf " \033[32m<push_repos> \033[0;1mAdding\t\t\033[0;1;36m$REPO Contents\033[0m...\n"
         printf "\033[31m"; git add -Av; printf "\033[0m"
 
-        printf " \033[34m<push_repos> \033[0;1mCommiting\t\t\033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[32m<push_repos> \033[0;1mCommiting\t\t\033[0;1;36m$REPO\033[0m...\n"
         CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
         printf "\033[31m"; git commit -vm "$CSTR"; printf "\033[0m"
 
-        printf " \033[34m<push_repos> \033[0;1mPushing\t\t\033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[32m<push_repos> \033[0;1mPushing\t\t\033[0;1;36m$REPO\033[0m...\n"
         printf "\033[31m"; git push -v origin master; printf "\033[0m"
-        printf " \033[34m<push_repos> \033[0;1mDone pushing\t\033[0;1;36m$REPO\033[0m.\n"
+        printf " \033[32m<push_repos> \033[0;1mDone pushing\t\033[0;1;36m$REPO\033[0m.\n"
     else
-        printf " \033[34m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
+        printf " \033[32m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
     fi
 
 done
 
 printf "\n"
-printf " \033[34m<push_repos> \033[0;1;32mDONE running push_repos\033[0m...\n"
+printf " \033[32m<push_repos> \033[0;1;32mDONE running push_repos\033[0m...\n"
 
 cd $RUN_DIR
 
