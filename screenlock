@@ -1,0 +1,17 @@
+#!/bin/bash
+# Takes the number of minutes to lock the screen.
+
+# Activate screensaver
+xscreensaver-command -activate &> /dev/null
+
+# Disable mouse and keyboard
+xinput set-prop 7 "Device Enabled" 0
+xinput set-prop 9 "Device Enabled" 0
+
+# Wait until deactivation is ok (seconds)
+sleep $1
+
+# Enable mouse and keyboard
+xinput set-prop 7 "Device Enabled" 1
+xinput set-prop 9 "Device Enabled" 1
+
