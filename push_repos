@@ -9,7 +9,7 @@ REPOS="/home/pi/smartmonitor /home/pi/bash /home/pi/c/sudoku_solver /home/pi/c/a
 printf " \033[0;34m<push_repos> \033[0;32mRunning push_repos with repos: \033[0;1;37m$REPOS\033[0m...\n"
 
 for REPO in $REPOS; do
-	printf " \033[34m<push_repos> \033[0;1mCDing to\t\t\033[0;1;36m$REPO\033[0m...\n"
+	printf " \033[34m<push_repos> \033[0;1mCDing to\t\t\t\033[0;1;36m$REPO\033[0m...\n"
 	cd $REPO
 
 	printf " \033[34m<push_repos> \033[0;1mShort status of\t\033[0;1;36m$REPO\033[0m:\n"
@@ -19,22 +19,22 @@ for REPO in $REPOS; do
 	printf "\033[0m"
 
 	if [[ "$STATUS" == "0" ]]; then
-		printf " \033[34m<push_repos> \033[0;1mAdding\t\t\033[0;1;36m$REPO Contents\033[0m...\n"
+		printf " \033[34m<push_repos> \033[0;1mAdding\t\t\t\033[0;1;36m$REPO Contents\033[0m...\n"
 		printf "\033[1;32m"; git add -Av; printf "\033[0m"
 
-		printf " \033[34m<push_repos> \033[0;1mCommiting\t\t\033[0;1;36m$REPO\033[0m...\n"
+		printf " \033[34m<push_repos> \033[0;1mCommiting\t\t\t\033[0;1;36m$REPO\033[0m...\n"
 		CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
 		printf "\033[1;32m"; git commit -vm "$CSTR"; printf "\033[0m"
 
-		printf " \033[34m<push_repos> \033[0;1mPushing\t\t\033[0;1;36m$REPO\033[0m...\n"
+		printf " \033[34m<push_repos> \033[0;1mPushing\t\t\t\033[0;1;36m$REPO\033[0m...\n"
 		printf "\033[1;32m"
 		git push -v origin master
 		git push -v --tags origin master
 		printf "\033[0m"
-		printf " \033[34m<push_repos> \033[0;1mDone pushing\t\033[0;1;36m$REPO\033[0m.\n"
+		printf " \033[34m<push_repos> \033[0;1mDone pushing\t\t\033[0;1;36m$REPO\033[0m.\n"
 		PUSHED=1
 	else
-		printf " \033[34m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
+		printf " \033[34m<push_repos> \033[0;1mAll good for\t\t\033[0;1;36m$REPO\033[0m...\n"
 	fi
 
 done
