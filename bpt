@@ -17,20 +17,20 @@ BREAK=0
 
 # Arg variable assignments.
 if [[ "$1" == "-w" ]]; then
-    WORK=$2
-    BREAK=300 # 5 minutes.
+	WORK=$2
+	BREAK=300 # 5 minutes.
 
 elif [[ "$1" == "-b" ]]; then
-    WORK=900 # 15 minutes.
-    BREAK=$2
+	WORK=900 # 15 minutes.
+	BREAK=$2
 
 elif [[ "$1" == "-wb" ]]; then
-    WORK=$2
-    BREAK=$3
+	WORK=$2
+	BREAK=$3
 
 else
-    WORK=900 # 15 minutes.
-    BREAK=300 # 5 minutes.
+	WORK=900 # 15 minutes.
+	BREAK=300 # 5 minutes.
 fi 
 
 
@@ -42,23 +42,23 @@ TIME=0
 ALERT=false
 
 if [[ $[$POM % 2] == 1 ]]; then
-    TYPE="Work"
-    TIME=$WORK
-    COUNT=$[$POM/2]
+	TYPE="Work"
+	TIME=$WORK
+	COUNT=$[$POM/2]
 
 else
-    TYPE="Break"
-    TIME=$BREAK
+	TYPE="Break"
+	TIME=$BREAK
 fi
 
 for (( i = $TIME; i >= 0; i-- )); do
 
-    MINUTES=$[$i/60]
-    SECONDS=$[$i%60]
+	MINUTES=$[$i/60]
+	SECONDS=$[$i%60]
 
-    printf "\t[%02d]\t\t\033[0;7m[%02d:%02d]\033[0m\t\t[%s]\r"\
-        $COUNT $MINUTES $SECONDS $TYPE
-    sleep 1
+	printf "\t[%02d]\t\t\033[0;7m[%02d:%02d]\033[0m\t\t[%s]\r"\
+		$COUNT $MINUTES $SECONDS $TYPE
+	sleep 1
 
 done
 
@@ -76,14 +76,14 @@ echo -n 
 function print_info() {
 
 echo "Running 'bpt.sh': Started at '`date +"%T"`'."
-echo "->->->->->->->->->->->->->->->->->->->->->->->->->->->"
+echo "+====================================================+"
 
 printf "\tWORK:\t\t%03d seconds\t(%02d minutes).\n"\
-    $WORK $[$WORK/60]
+	$WORK $[$WORK/60]
 printf "\tBREAK:\t\t%03d seconds\t(%02d minutes).\n"\
-    $BREAK $[$BREAK/60]
+	$BREAK $[$BREAK/60]
 
-echo "->->->->->->->->->->->->->->->->->->->->->->->->->->->"
+echo "+====================================================+"
 echo -e "\tPomodoros:\tTime Left:\tTimer:"
 
 }
@@ -95,8 +95,8 @@ print_info
 
 for (( POM=1; POM>-1; POM++ )); do
 
-    countdown
-    play_sound
+	countdown
+	play_sound
 
 done
 
