@@ -2,7 +2,8 @@
 
 SAVED_TTY=$(stty -g)
 
-function p_fun() {
+function p_fun()
+{
 	echo -n "Press any key to continue ... "
 	stty raw
 	dd if="/dev/tty" of="/dev/null" count="1" 2> /dev/null
