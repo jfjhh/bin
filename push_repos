@@ -1,5 +1,7 @@
 #!/bin/bash
-# ~/bash/push_repos
+#
+# push_repos
+#
 # does a git push of all git repos
 # adding yes as an argument forces pushing of repos,
 # ignoring if there have been any new changes -- is not enabled
@@ -50,5 +52,7 @@ printf "\n"
 printf " \033[34m<push_repos> \033[0;32mDONE running push_repos\033[0m...\n"
 
 cd $RUN_DIR
+(
 exit $PUSHED # returns 1 if pushed any repos
+)
 
