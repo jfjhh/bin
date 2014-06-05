@@ -1,10 +1,14 @@
 #!/bin/bash
 # ~/bash/push_repos
 # does a git push of all git repos
+# adding yes as an argument forces pushing of repos,
+# ignoring if there have been any new changes -- is not enabled
+# by default because it takes longer.
 
 PUSHED=0
 RUN_DIR=`pwd`
 REPOS="/home/pi/smartmonitor /home/pi/bash /home/pi/c/sudoku_solver /home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/dotfiles /home/pi/css"
+FORCE=$1
 
 printf " \033[0;34m<push_repos> \033[0;32mRunning push_repos with repos: \033[0;1;31m$REPOS\033[0m...\n"
 
@@ -18,7 +22,7 @@ for REPO in $REPOS; do
 	STATUS="$?"
 	printf "\033[0m"
 
-	if [[ "$STATUS" == "0" ]]; then
+	if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
 		printf " \033[34m<push_repos> \033[0;1mAdding\t\t\t\033[0;1;36m$REPO Contents\033[0m...\n"
 		printf "\033[1;32m"; git add -Av; printf "\033[0m"
 
