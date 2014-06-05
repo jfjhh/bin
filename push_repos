@@ -4,6 +4,9 @@
 # adding yes as an argument forces pushing of repos,
 # ignoring if there have been any new changes -- is not enabled
 # by default because it takes longer.
+#
+# returns 1 if pushed any repos
+#
 
 PUSHED=0
 RUN_DIR=`pwd`
@@ -47,5 +50,5 @@ printf "\n"
 printf " \033[34m<push_repos> \033[0;32mDONE running push_repos\033[0m...\n"
 
 cd $RUN_DIR
-return $PUSHED # returns 1 if pushed any repos
+exit $PUSHED # returns 1 if pushed any repos
 
