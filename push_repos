@@ -18,7 +18,7 @@ FORCE=$1
 printf " \033[0;34m<push_repos> \033[0;32mRunning push_repos with repos: \033[0;1;31m$REPOS\033[0m...\n"
 
 for REPO in $REPOS; do
-	printf " \033[34m<push_repos> \033[0;1mCDing to\t\t\t\033[0;1;36m$REPO\033[0m...\n"
+	printf " \033[34m<push_repos> \033[0;1mCDing to\t\t\033[0;1;36m$REPO\033[0m...\n"
 	cd $REPO
 
 	printf " \033[34m<push_repos> \033[0;1mShort status of\t\033[0;1;36m$REPO\033[0m:\n"
@@ -43,7 +43,7 @@ for REPO in $REPOS; do
 		printf " \033[34m<push_repos> \033[0;1mDone pushing\t\t\033[0;1;36m$REPO\033[0m.\n"
 		PUSHED=1
 	else
-		printf " \033[34m<push_repos> \033[0;1mAll good for\t\t\033[0;1;36m$REPO\033[0m...\n"
+		printf " \033[34m<push_repos> \033[0;1mAll good for\t\033[0;1;36m$REPO\033[0m...\n"
 	fi
 
 done
