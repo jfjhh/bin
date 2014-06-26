@@ -1,0 +1,18 @@
+#!/bin/bash
+
+clear
+echo -ne "\n\t\t\t\t\e[0;7m                           \n\t"
+echo -ne "\t\t\t\e[0;7m   BASH COLORS REFERENCE   \n\t"
+echo -ne "\t\t\t\e[0;7m                           \n\n\t"
+
+for ((i=0; i<=110; i++)); do
+
+	printf "\e[0;%dm%5d   \e[0m" $i $i
+
+	if (( i % 10 == 0 )); then
+		echo -ne "\n\t"
+	fi
+done
+
+echo
+
