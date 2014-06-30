@@ -13,7 +13,7 @@ function usage()
 # Test for an X-session.
 if [[ -z "$DISPLAY" ]]; then
 	echo "Must be in an X-session to run."
-	return -1
+	return 2
 fi
 
 # Test the argument is a valid number ( 0 > $1 > 500 ).
