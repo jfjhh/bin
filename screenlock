@@ -1,17 +1,54 @@
 #!/bin/bash
 # Takes the number of minutes to lock the screen.
+# After the time specified has passed, you can move the mouse or type on
+# the keyboard to use the system.
 
-# Activate screensaver
-xscreensaver-command -activate &> /dev/null
+function usage()
+{
+	echo "USAGE: screeenlock <minutes>"
+	echo "Please enter a valid time to lock."
+	return 1
+}
 
-# Disable mouse and keyboard
-xinput set-prop 7 "Device Enabled" 0
-xinput set-prop 9 "Device Enabled" 0
+# Test for an X-session.
+if [[ -z "$DISPLAY" ]]; then
+	echo "Must be in an X-session to run."
+	return -1
+fi
 
-# Wait until deactivation is ok (seconds)
-sleep $1
+# Test the argument is a valid number ( 0 > $1 > 500 ).
+RE='^[0-9]+$'
 
-# Enable mouse and keyboard
-xinput set-prop 7 "Device Enabled" 1
-xinput set-prop 9 "Device Enabled" 1
+if ! [[ $1 =~ $RE ]]; then
+	usage
+
+elif [ $1 -gt 500 ]; then
+	usage
+
+else
+	# Log locking time to the console.
+	echo "Locking for $1 minutes..."
+
+	# Activate screensaver.
+	xscreensaver-command -activate
+
+	#  Disable input devices.
+	echo "Disabling input devices..."
+	for DEVICE_ID in {4..9}; do
+		xinput set-prop $DEVICE_ID "Device Enabled" 0
+		printf "\t%2d down\n" $DEVICE_ID
+	done
+
+	# Wait until reactivation of input devices is allowed (calculate
+	# seconds because you can't do $VARm like you could do 1m for 1 minute).
+	echo "Sleeping..."
+	sleep $[ $1 * 60 ]
+
+	# Enable input devices.
+	echo "Enabling input devices..."
+	for DEVICE_ID in {4..9}; do
+		xinput set-prop $DEVICE_ID "Device Enabled" 1
+		printf "\t%2d up\n" $DEVICE_ID
+	done
+fi
 
