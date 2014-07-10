@@ -1,18 +1,21 @@
 #!/bin/bash
+#
+# Slightly modified color escape code script from online.
+# http://wiki.bash-hackers.org/scripting/terminalcodes
+#	#=> Constantine's comment.
+#
 
-clear
-echo -ne "\n\t\t\t\t\e[0;7m                           \n\t"
-echo -ne "\t\t\t\e[0;7m   BASH COLORS REFERENCE   \n\t"
-echo -ne "\t\t\t\e[0;7m                           \n\n\t"
-
-for ((i=0; i<=110; i++)); do
-
-	printf "\e[0;%dm%5d   \e[0m" $i $i
-
-	if (( i % 10 == 0 )); then
-		echo -ne "\n\t"
-	fi
+for a in 0 1 4 5 7; do
+	echo "a=$a "
+	for ((f=0; f<=9; f++)); do
+		for ((b=0; b<=9; b++)); do
+			echo -ne "\\033[${a};3${f};4${b}m"
+			echo -ne "\\\\\\\\033[${a};3${f};4${b}m"
+			echo -ne "\\033[0m "
+		done
+		echo
+	done
+	echo
 done
-
 echo
 
