@@ -12,9 +12,9 @@
 
 PUSHED=0
 RUN_DIR=`pwd`
-REPOS="/home/pi/smartmonitor /home/pi/bash /home/pi/c/sudoku_solver \
+REPOS="/home/pi/smartmonitor /home/pi/bin /home/pi/c/sudoku_solver \
 	/home/pi/c/approx_pi /home/pi/c/lcthw /home/pi/c/bookshelf \
-	/home/pi/dotfiles /home/pi/css"
+	/home/pi/dotfiles /home/pi/web/css /home/pi/ruby/qotd"
 FORCE=$1
 
 printf " \033[0;34m<push_repos> \033[0;32mRunning push_repos with repos: \033[0;1;31m$REPOS\033[0m...\n"
