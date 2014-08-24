@@ -29,15 +29,21 @@ else
 	# Log locking time to the console.
 	echo "Locking for $1 minutes..."
 
-	# Activate screensaver.
-	xscreensaver-command -activate
+	# Input devices list (approximation).
+	ID_LIST=""
+	for ID in {2..15}; do
+		ID_LIST+="$ID "
+	done
 
 	#  Disable input devices.
-	echo "Disabling input devices..."
-	for DEVICE_ID in {4..9}; do
-		xinput set-prop $DEVICE_ID "Device Enabled" 0
+	echo "Disabling input devices...$ID_LIST"
+	for DEVICE_ID in $ID_LIST; do
+		xinput set-prop $DEVICE_ID "Device Enabled" 0 2> /dev/null
 		printf "\t%2d down\n" $DEVICE_ID
 	done
+
+	# Activate screensaver.
+	xscreensaver-command -activate
 
 	# Wait until reactivation of input devices is allowed (calculate
 	# seconds because you can't do $VARm like you could do 1m for 1 minute).
@@ -46,8 +52,8 @@ else
 
 	# Enable input devices.
 	echo "Enabling input devices..."
-	for DEVICE_ID in {4..9}; do
-		xinput set-prop $DEVICE_ID "Device Enabled" 1
+	for DEVICE_ID in $ID_LIST; do
+		xinput set-prop $DEVICE_ID "Device Enabled" 1 2> /dev/null
 		printf "\t%2d up\n" $DEVICE_ID
 	done
 fi
