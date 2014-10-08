@@ -40,10 +40,11 @@ trap quit SIGHUP SIGINT SIGTERM
 
 function print_list
 {
+	tail -100 ~pi/jsite/jsite.log |
 	sed -ne '/^99.90.212.118/d' -ne '/^Invalid/d' -ne '/Thin/d'\
 		-ne '/Maximum/d' -ne '/^\=\=/d' -ne '/^Listening/d'\
-		-ne '/^$/d' -ne '/var/d' -ne '/HTTP\/[0-9]\.[0-9]\" [^200]/p'\
-		~pi/jsite/jsite.log > $BUFFER
+		-ne '/^$/d' -ne '/var/d' -ne '/HTTP\/[0-9]\.[0-9]\" [^200]/p' >\
+	$BUFFER
 
 	while read LINE; do
 		# check_bottom
