@@ -3,7 +3,10 @@
 #   It could probably be made more efficent, but speed is not an issue because
 #   an interval between lines is needed to make output more readable.
 
+LOGFILE="/home/pi/jsite/jsite.log"
 BUFFER=`mktemp /tmp/buffer.XXXX`
+RESULTBUF=`mktemp /tmp/resultbuf.XXXX`
+
 function quit
 {
 	rm $BUFFER 2> /dev/null
@@ -14,49 +17,48 @@ function quit
 }
 trap quit SIGHUP SIGINT SIGTERM
 
-# SIDE=0
-# function check_bottom
-# {
-# 	echo -en "\e[6n"
-# 	read -sdR CURSTR
-# 	CURPOS=${CURSTR#*[}
-# 	CURROW=`echo -n "$CURPOS" | sed 's/\([0-9]*\)\;.*/\1/'`
-# 	CURCOL=`echo -n "$CURPOS" | sed 's/\;\([0-9]*\)/\1/'`
-# 	BOTTOM=$[ $LINES - 4 ]
-
-# 	if [[ $CURROW == $BOTTOM ]]; then
-# 		if [ $SIDE == 0 ]; then
-# 			tput cup 2 $[ $COLS / 2 + 2 ] # to right column
-# 			SIDE=1
-# 		else
-# 			tput cup 2 2 # to left column
-# 			SIDE=0
-# 		fi
-# 	else
-# 		tput cub $[ ${#CURSTR} + 2 ] # +2 to back over '^]'
-# 		tput ech 10
-# 	fi
-# }
-
 function print_list
 {
-	tail -100 ~pi/jsite/jsite.log |
+	cat $LOGFILE |
 	sed -ne '/^99.90.212.118/d' -ne '/^Invalid/d' -ne '/Thin/d'\
 		-ne '/Maximum/d' -ne '/^\=\=/d' -ne '/^Listening/d'\
 		-ne '/^$/d' -ne '/var/d' -ne '/HTTP\/[0-9]\.[0-9]\" [^200]/p' >\
 	$BUFFER
 
+	tail -50 $BUFFER > $RESULTBUF
+
 	while read LINE; do
-		# check_bottom
 		echo $LINE |
 		sed -e 's/\" [0-9]*.*/\"/'\
-			-e 's/\"\(GET\|POST\) \(\/.*\) HTTP.*\"/\x1b[0;1;33m\2\x1b[0m/'\
+			-e 's/\"\(GET\|POST\|HEAD\) \(\/.*\) HTTP.*\"/\x1b[0;1;33m\2\x1b[0m/'\
 			-e 's/\(.*\)\[\(.*\)\]/\1\x1b[0;1;32m\2\x1b[0m\t/'\
 			-e 's/^\([0-9\.]*\) \-/\x1b[0;1;31m\1\x1b[0m\t/g'\
 			-e 's/\-\s//g'\
 			-e 's/.*/\t\t\t\t\t&/'
 		sleep $INTERVAL
-	done < $BUFFER
+	done < $RESULTBUF
+}
+
+function print_list_ext
+{
+	cat $LOGFILE |
+	sed -ne '/^99.90.212.118/d' -ne '/^Invalid/d' -ne '/Thin/d'\
+		-ne '/Maximum/d' -ne '/^\=\=/d' -ne '/^Listening/d'\
+		-ne '/^$/d' -ne '/var/d' -ne '/HTTP\/[0-9]\.[0-9]\" [0-9]*/p' >\
+	$BUFFER
+
+	tail -50 $BUFFER > $RESULTBUF
+
+	while read LINE; do
+		echo $LINE |
+		sed -e 's/\" [0-9]*.*/\"/'\
+			-e 's/\"\(GET\|POST\|HEAD\) \(\/.*\) HTTP.*\"/\x1b[0;1;33m\2\x1b[0m/'\
+			-e 's/\(.*\)\[\(.*\)\]/\1\x1b[0;1;32m\2\x1b[0m\t/'\
+			-e 's/^\([0-9\.]*\) \-/\x1b[0;1;31m\1\x1b[0m\t/g'\
+			-e 's/\-\s//g'\
+			-e 's/.*/\t\t\t\t\t&/'
+		sleep $INTERVAL
+	done < $RESULTBUF
 }
 
 ### Start execution ###
@@ -73,7 +75,7 @@ STATLEN=$[ $COLS - ${#STATUS} - 1]
 tput clear
 tput cup 0 0
 tput dim
-echo "Logged HTTP requests with return status non-200:"
+echo "Logged HTTP requests, parsed from Thin logfile."
 
 tput sc
 tput cup 0 $STATLEN
@@ -92,8 +94,7 @@ tput smcup
 tput civis
 tput csr 2 $[ $LINES - 2 ]
 tput cud 2
-(
-while :; do print_list; done
-)
+
+( while :; do [[ "$2" == "-n" ]] && print_list_ext || print_list ; done )
 quit
 
