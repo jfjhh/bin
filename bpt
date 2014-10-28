@@ -12,7 +12,7 @@
 POM=0
 WORK=0
 BREAK=0
-SOUND="/home/pi/button-09.wav"
+SOUND="/home/$USER/button-09.wav"
 
 
 # Arg variable assignments.
@@ -31,7 +31,7 @@ elif [[ "$1" == "-wb" ]]; then
 else
 	WORK=900 # 15 minutes.
 	BREAK=300 # 5 minutes.
-fi 
+fi
 
 
 # Display countdown.
