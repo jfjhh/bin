@@ -1,0 +1,104 @@
+#!/bin/bash
+
+function print_help()
+{
+	[ -n "$1" ] && echo "$1"
+	cat <<-EOF
+	==========================================================================
+
+	USAGE: ifchanged {-h} {-s} [-c COMMAND] {-i INTERVAL (default 2)}.
+
+	==========================================================================
+	-h :	Show this help.
+	==========================================================================
+	-s :	Silent mode, don't show stdout (still shows stderr).
+	==========================================================================
+	-c :	The one-word command to compare the output of. Can use a longer
+	======= command from stdin by using '-c stdin'.
+	==========================================================================
+	-i :	The interval of time to wait between running commands in seconds.
+	==========================================================================
+
+	EOF
+	exit 1
+}
+
+function cleanup()
+{
+	echo "Exiting ..." 1>&2
+	if [[ -n "$1" ]]; then
+		rm "$1"
+	fi
+}
+
+[[ -z $TMPDIR ]] && TMP="/tmp" || TMP=$TMPDIR
+TMPOUT="`mktemp $TMP/ifchanged.XXXX`"
+
+trap "cat $TMPOUT; cleanup $TMPOUT; exit 2;" SIGINT SIGTERM
+
+function main()
+{
+	[ $# -lt 2 ] && print_help "Only $# args."
+
+	CMD=""
+	CMD_OUT=""
+	CMD_OUT_TMP=""
+	SEPARATOR="======================================"
+	INTERVAL=2
+	ELAPSED=0
+	SILENT=false
+	OK=true
+	TMP=""
+
+	while getopts "hsc:i:m:" ARG; do
+		case $ARG in
+			's' )
+				SILENT=true
+				;;
+			'c' )
+				CMD="$OPTARG"
+				;;
+			'i' )
+				INTERVAL=$OPTARG
+				;;
+			'm' )
+				MAX_TIME=$OPTARG
+				;;
+			'h' )
+				print_help
+				;;
+		esac
+	done
+	echo "SILENT: $SILENT"
+
+	if [[ "$CMD" == "stdin" ]]; then
+		read CMD
+	fi
+
+	[[ $INTERVAL -le 0 ]] && print_help "Bad -i arg: $INTERVAL"
+	[[ -z "${CMD}" ]] && print_help "Bad -c arg: $CMD"
+
+	tput setaf 212
+	while $OK ; do
+		echo -en "\tRunning command: \"$CMD\" \
+			($ELAPSED seconds elapsed).\r" >&2
+		CMD_OUT_TMP="`eval $CMD`"
+		echo $CMD_OUT_TMP > $TMPOUT
+		sleep $INTERVAL
+		echo "$SEPARATOR" >> $TMPOUT
+		let ELAPSED=$[$ELAPSED + $INTERVAL]
+		OK=false
+		CMD_OUT="`eval $CMD`"
+		echo $CMD_OUT >> $TMPOUT
+		[[ "$CMD_OUT" != "$CMD_OUT_TMP" ]] && OK=false || OK=true
+	done
+
+	tput cud1
+	tput setaf 192
+	! $SILENT && cat "$TMPOUT"
+	tput sgr0
+	cleanup $TMPOUT
+}
+
+( main $* )
+
