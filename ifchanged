@@ -11,7 +11,8 @@ function print_help()
 	==========================================================================
 	-h :	Show this help.
 	==========================================================================
-	-s :	Silent mode, don't show stdout (still shows stderr).
+	-s :	Silent mode, don't show informational messages, only command
+	======= output at the end of the script, uncolored (default false).
 	==========================================================================
 	-c :	The one-word command to compare the output of. Can use a longer
 	======= command from stdin by using '-c stdin'.
@@ -25,16 +26,19 @@ function print_help()
 
 function cleanup()
 {
-	echo "Exiting ..." 1>&2
 	if [[ -n "$1" ]]; then
 		rm "$1"
+	fi
+	if [[ -n "$2" ]]; then
+		rm "$2"
 	fi
 }
 
 [[ -z $TMPDIR ]] && TMP="/tmp" || TMP=$TMPDIR
-TMPOUT="`mktemp $TMP/ifchanged.XXXX`"
+TMPOUT_1="`mktemp $TMP/ifchanged.XXXX`"
+TMPOUT_2="`mktemp $TMP/ifchanged.XXXX`"
 
-trap "cat $TMPOUT; cleanup $TMPOUT; exit 2;" SIGINT SIGTERM
+trap "cleanup $TMPOUT_1 $TMPOUT_2; exit 2;" SIGINT SIGTERM
 
 function main()
 {
@@ -69,7 +73,6 @@ function main()
 				;;
 		esac
 	done
-	echo "SILENT: $SILENT"
 
 	if [[ "$CMD" == "stdin" ]]; then
 		read CMD
@@ -80,24 +83,22 @@ function main()
 
 	tput setaf 212
 	while $OK ; do
-		echo -en "\tRunning command: \"$CMD\" \
+		! $SILENT && echo -en "\tRunning command: \"$CMD\" \
 			($ELAPSED seconds elapsed).\r" >&2
-		CMD_OUT_TMP="`eval $CMD`"
-		echo $CMD_OUT_TMP > $TMPOUT
+		eval "$CMD" > $TMPOUT_1
+		CMD_OUT_TMP="`cat $TMPOUT_1`"
 		sleep $INTERVAL
-		echo "$SEPARATOR" >> $TMPOUT
 		let ELAPSED=$[$ELAPSED + $INTERVAL]
 		OK=false
-		CMD_OUT="`eval $CMD`"
-		echo $CMD_OUT >> $TMPOUT
+		eval "$CMD" > $TMPOUT_2
+		CMD_OUT="`cat $TMPOUT_2`"
 		[[ "$CMD_OUT" != "$CMD_OUT_TMP" ]] && OK=false || OK=true
 	done
 
-	tput cud1
-	tput setaf 192
-	! $SILENT && cat "$TMPOUT"
 	tput sgr0
-	cleanup $TMPOUT
+	! $SILENT && tput cud1 && tput setaf 192
+	cat "$TMPOUT_1" && echo -e "\n$SEPARATOR\n" && cat "$TMPOUT_2"
+	cleanup $TMPOUT_1 $TMPOUT_2
 }
 
 ( main $* )
