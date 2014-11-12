@@ -56,8 +56,7 @@ function main()
 	[ -z "$EMAIL" ] && print_help "Bad email value: $EMAIL"
 	[ -z "$LSFLAGS" ] && print_help "Bad ls flags: $LSFLAGS"
 
-	CMDSTR="find $DIR -exec ls $LSFLAGS {} \\\; \| grep -v --color=never \
-		'ownCloud/\.[a-z0-9]*'"
+	CMDSTR="find $DIR -exec ls $LSFLAGS {} \\\; \| grep -v --color=never 'ownCloud/\.[a-z0-9]*'"
 	echo -e "emailing output when changed of:\n$CMDSTR\n... to <$EMAIL>."
 
 	while :; do
