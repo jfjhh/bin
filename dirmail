@@ -30,6 +30,7 @@ function main()
 	ADMIN_EMAIL="alex.striff1@gmail.com"
 	LSFLAGS="-Flh"
 	CMDSTR=""
+	KEY="/home/pi/.ssh/dirmail_rsa"
 
 	[ $# -lt 2 ] && print_help "Only got $# arg(s)."
 
@@ -66,14 +67,14 @@ function main()
 		*ATTENTION: Your OwnCloud directory (at $DIR) has changed! The difference
 		is documented below:
 
-		============================================================
+		================================
 
 		EOF
-		echo "$CMDSTR" | ifchanged -c stdin -i 2 -sd >> $TMPFILE
+		echo "$CMDSTR" | /home/pi/bin/ifchanged -c stdin -i 2 -sd >> $TMPFILE
 		[ $? -eq 2 ] && quit $TMPFILE
 		cat <<-EOF >> "$TMPFILE"
 
-		============================================================
+		================================
 
 		* If you no longer wish to recieve automated messages, or want to only
 		monitor a specific directory, contact the admin at <${ADMIN_EMAIL}>.
@@ -82,7 +83,14 @@ function main()
 
 		EOF
 
-		mutt -s "Your OwnCloud Directory has changed." "$EMAIL" < "$TMPFILE"
+		scp -i "$KEY" "$TMPFILE" \
+			"jfjhh@debian.local:~/.owncloud_dirmail/dirmail_tmp.txt"
+		echo "$EMAIL" > "$TMPFILE"
+		scp -i "$KEY" "$TMPFILE" \
+			"jfjhh@debian.local:~/.owncloud_dirmail/email.txt"
+		echo "$RANDOM" > "$TMPFILE"
+		scp -i "$KEY" "$TMPFILE" \
+			"jfjhh@debian.local:~/.owncloud_dirmail/change.txt"
 		let CHANGES=$[$CHANGES + 1]
 
 		rm "$TMPFILE"
