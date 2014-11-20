@@ -12,7 +12,7 @@
 POM=0
 WORK=0
 BREAK=0
-SOUND="/home/$USER/button-09.wav"
+SOUND="$HOME/button-09.wav"
 
 
 # Arg variable assignments.
