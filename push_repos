@@ -21,6 +21,7 @@ printf " \e[0;34m<push_repos> \e[0;32mRunning push_repos with repos:
 REPOS=`echo -n $REPOS | sed 's/\.git//g'`
 
 for REPO in $REPOS; do
+	printf " \e[34m<push_repos> \e[0;1m\e[0;1;31m$REPO\e[0m...\n"
 	printf " \e[34m<push_repos> \e[0;1mCDing to\t\t\e[0;1;36m$REPO\e[0m...\n"
 	cd $REPO
 
