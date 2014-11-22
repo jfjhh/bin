@@ -17,7 +17,7 @@ REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | \
 FORCE=$1
 
 printf " \e[0;34m<push_repos> \e[0;32mRunning push_repos with repos:
-\e[0;1;31m`echo $REPOS | sed 's/\w/\n/g'`\e[0m...\n"
+\e[0;1;31m`echo -n $REPOS | sed 's/\s/\n/g'`\e[0m...\n"
 
 for REPO in $REPOS; do
 	printf " \e[34m<push_repos> \e[0;1m\e[0;1;31m$REPO\e[0m...\n"
