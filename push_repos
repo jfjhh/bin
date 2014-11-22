@@ -24,7 +24,7 @@ for REPO in $REPOS; do
 	printf " \e[34m<push_repos> \e[0;1mCDing to\t\t\e[0;1;36m$REPO\e[0m...\n"
 	cd $REPO
 
-	START_BRANCH=`git branch --no-color | grep --color=never "\*.*"`
+	START_BRANCH="`git branch --no-color | grep --color=never '\*.*'`"
 
 	for BRANCH in `git branch --no-color | sed -r 's/\*?\s+//'`; do
 
@@ -60,7 +60,7 @@ for REPO in $REPOS; do
 		fi
 	done
 
-	git checkout $START_BRANCH
+	# git checkout $START_BRANCH
 done
 
 printf "\n"
