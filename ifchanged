@@ -108,9 +108,10 @@ function main()
 		tput setaf 192
 	fi
 	if $DIFF ; then
-		diff -t "$TMPOUT_1" "$TMPOUT_2" |
+		diff "$TMPOUT_1" "$TMPOUT_2" |
 		grep --color=never "^[<>]" | sed -e '/^[<>]\stotal/d' -e \
-		's/\(^[<>]\s\)[a-z\-]*\s[0-9]*\s[a-z]*\s[a-z]*\s\(.*\)/\1\2/'
+			's/\(^[<>]\s\)[a-z\-]*\s*[0-9]*\s\([a-z\-]*\s*\)\{2\}\(.*\)/\1\3/'\
+			-e 's/\s/\t/'
 	else
 		cat "$TMPOUT_1" && \
 			echo -e "\n$SEPARATOR\n" && cat "$TMPOUT_2"
