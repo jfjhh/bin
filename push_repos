@@ -61,6 +61,7 @@ for REPO in $REPOS; do
 	done
 
 	git checkout $START_BRANCH &> /dev/null
+	echo
 done
 
 printf "\n"
