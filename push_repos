@@ -24,31 +24,39 @@ for REPO in $REPOS; do
 	printf " \e[34m<push_repos> \e[0;1mCDing to\t\t\e[0;1;36m$REPO\e[0m...\n"
 	cd $REPO
 
-	printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
-	printf "\e[1;32m"
-	git status -s | grep ' '
-	STATUS="$?"
-	printf "\e[0m"
+	for BRANCH in `git branch | sed -r 's/\*?\s+//'`; do
 
-	if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
-		printf " \e[34m<push_repos> \e[0;1mAdding\t\t\e[0;1;36m$REPO Contents\e[0m...\n"
-		printf "\e[1;32m"; git add -Av; printf "\e[0m"
+		printf " \e[34m<push_repos> \e[0;1mSwitching branch to\t\e[0;1;36m$BRANCH\e[0m...\n"
+		git checkout $BRANCH
 
-		printf " \e[34m<push_repos> \e[0;1mCommiting\t\t\e[0;1;36m$REPO\e[0m...\n"
-		CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
-		printf "\e[1;32m"; git commit -vm "$CSTR"; printf "\e[0m"
-
-		printf " \e[34m<push_repos> \e[0;1mPushing\t\t\e[0;1;36m$REPO\e[0m...\n"
+		printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
 		printf "\e[1;32m"
-		git push -v origin master
-		git push -v --tags origin master
+		git status -s | grep ' '
+		STATUS="$?"
 		printf "\e[0m"
-		printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
-		PUSHED=1
-	else
-		printf " \e[34m<push_repos> \e[0;1mAll good for\t\e[0;1;36m$REPO\e[0m...\n"
-	fi
 
+		if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
+
+			printf " \e[34m<push_repos> \e[0;1mAdding\t\t\e[0;1;36m$REPO Contents\e[0m...\n"
+			printf "\e[1;32m"; git add -Av; printf "\e[0m"
+
+			printf " \e[34m<push_repos> \e[0;1mCommiting\t\t\e[0;1;36m$REPO\e[0m...\n"
+			CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
+			printf "\e[1;32m"; git commit -vm "$CSTR"; printf "\e[0m"
+
+			printf " \e[34m<push_repos> \e[0;1mPushing\t\t\e[0;1;36m$REPO\e[0m...\n"
+			printf "\e[1;32m"
+
+			git push -v origin master
+			git push -v --tags origin master
+
+			printf "\e[0m"
+			printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
+			PUSHED=1
+		else
+			printf " \e[34m<push_repos> \e[0;1mAll good for\t\e[0;1;36m$REPO\e[0m...\n"
+		fi
+	done
 done
 
 printf "\n"
