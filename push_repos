@@ -32,7 +32,7 @@ for REPO in $REPOS; do
 		git checkout $BRANCH &> /dev/null
 
 		printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
-		printf "\e[1;32m"
+		printf "\e[1;35m"
 		git status -s | grep ' '
 		STATUS="$?"
 		printf "\e[0m"
@@ -40,14 +40,14 @@ for REPO in $REPOS; do
 		if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
 
 			printf " \e[34m<push_repos> \e[0;1mAdding\t\t\e[0;1;36m$REPO Contents\e[0m...\n"
-			printf "\e[1;32m"; git add -Av; printf "\e[0m"
+			printf "\e[1;35m"; git add -Av; printf "\e[0m"
 
 			printf " \e[34m<push_repos> \e[0;1mCommiting\t\t\e[0;1;36m$REPO\e[0m...\n"
 			CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
-			printf "\e[1;32m"; git commit -vm "$CSTR"; printf "\e[0m"
+			printf "\e[1;35m"; git commit -vm "$CSTR"; printf "\e[0m"
 
 			printf " \e[34m<push_repos> \e[0;1mPushing\t\t\e[0;1;36m$REPO\e[0m...\n"
-			printf "\e[1;32m"
+			printf "\e[1;35m"
 
 			git push -v origin master
 			git push -v --tags origin master
