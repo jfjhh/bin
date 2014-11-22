@@ -29,7 +29,7 @@ for REPO in $REPOS; do
 	for BRANCH in `git branch --no-color | sed -r 's/\*?\s+//'`; do
 
 		printf " \e[34m<push_repos> \e[0;1mSwitching branch to\t\e[0;1;36m$BRANCH\e[0m...\n"
-		git checkout $BRANCH > /dev/null
+		git checkout $BRANCH &> /dev/null
 
 		printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
 		printf "\e[1;32m"
@@ -60,7 +60,7 @@ for REPO in $REPOS; do
 		fi
 	done
 
-	# git checkout $START_BRANCH
+	git checkout $START_BRANCH &> /dev/null
 done
 
 printf "\n"
