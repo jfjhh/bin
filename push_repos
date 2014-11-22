@@ -12,13 +12,12 @@
 
 PUSHED=0
 RUN_DIR=`pwd`
-REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | xargs`
+REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | \
+	sed 's/\.git//g'`
 FORCE=$1
 
 printf " \e[0;34m<push_repos> \e[0;32mRunning push_repos with repos:
-\e[0;1;31m$REPOS\e[0m...\n"
-
-REPOS=`echo -n $REPOS | sed 's/\.git//g'`
+\e[0;1;31m`echo $REPOS | sed 's/\w/\n/g'`\e[0m...\n"
 
 for REPO in $REPOS; do
 	printf " \e[34m<push_repos> \e[0;1m\e[0;1;31m$REPO\e[0m...\n"
