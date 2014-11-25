@@ -67,8 +67,8 @@ done
 # Visual alert
 function play_sound() {
 
-echo -n 
-aplay $SOUND &> /dev/null
+# echo -n  # Visual Bell
+aplay $SOUND /dev/null
 
 }
 
@@ -94,9 +94,7 @@ pause -r # press any key to continue, then do carriage return.
 print_info
 
 for (( POM=1; POM>-1; POM++ )); do
-
 	countdown
-	play_sound
-
+	play_sound &> /dev/null &
 done
 
