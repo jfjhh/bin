@@ -7,10 +7,10 @@
 # ignoring if there have been any new changes -- is not enabled
 # by default because it takes longer.
 #
-# returns 1 if pushed any repos
+# returns 1 if it did not push any repos
 #
 
-PUSHED=0
+PUSHED=1
 RUN_DIR=`pwd`
 REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | \
 	sed 's/\.git//g'`
@@ -54,7 +54,7 @@ for REPO in $REPOS; do
 
 			printf "\e[0m"
 			printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
-			PUSHED=1
+			PUSHED=0
 		else
 			printf " \e[34m<push_repos> \e[0;1mAll good for\t\e[0;1;36m$REPO\e[0m...\n"
 		fi
@@ -69,6 +69,6 @@ printf " \e[34m<push_repos> \e[0;32mDONE running push_repos\e[0m...\n"
 
 cd $RUN_DIR
 (
-exit $PUSHED # returns 1 if pushed any repos
+exit $PUSHED # returns 1 if it did not push any repos
 )
 
