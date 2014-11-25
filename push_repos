@@ -50,7 +50,7 @@ for REPO in $REPOS; do
 			printf "\e[1;35m"
 
 			git push -v origin master
-			git push -v --tags origin master
+			git push -v --tags origin $BRANCH
 
 			printf "\e[0m"
 			printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
