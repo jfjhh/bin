@@ -1,0 +1,26 @@
+#!/bin/bash
+
+TMP=$(mktemp info.XXXX)
+FILE="$HOME/$TMP"
+
+function banner()
+{
+	echo
+	echo "================================================="
+	echo
+}
+
+touch $FILE
+
+banner | tee $FILE
+date | tee $FILE
+banner | tee $FILE
+df -h | tee $FILE
+banner | tee $FILE
+ifconfig -a | tee $FILE
+banner | tee $FILE
+
+lp $FILE
+
+rm $FILE
+
