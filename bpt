@@ -33,6 +33,9 @@ else
 	BREAK=300 # 5 minutes.
 fi
 
+# Figure out if this is in xfce (my desktop).
+IN_XFCE=false
+[ -n `which xfce` ] && [ -n "$DISPLAY" ] && IN_XFCE=true
 
 # Display countdown.
 function countdown() {
@@ -67,6 +70,7 @@ done
 # Visual alert
 function play_sound() {
 
+[ $IN_XFCE ] && notify-send -u low -t 3000 "A BPT has finished."
 # echo -n  # Visual Bell
 aplay $SOUND /dev/null
 
