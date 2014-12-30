@@ -93,6 +93,7 @@ echo -e "\tPomodoros:\tTime Left:\tTimer:"
 }
 
 
+tput civis
 clear
 pause -r # press any key to continue, then do carriage return.
 print_info
