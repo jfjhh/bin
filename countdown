@@ -1,0 +1,408 @@
+#!/bin/bash
+#
+# A countdown timer.
+
+# Trap the exit to clean the screen a bit
+function quit
+{
+	tput rmcup
+	tput cnorm
+	tput sgr0
+	[ -z "$1" ] && exit 0 || exit $1
+}
+trap quit SIGINT SIGTERM
+
+# Print long usage and exit.
+function long_usage
+{
+	cat <<EOF
+NAME
+	\`countdown' - A countdown timer.
+
+SYNOPSIS
+	countdown {-h, -H} [{-o, -t} time] {-n name}
+
+DESCRIPTION
+	Countdown will display a timer that will count down to zero. The time
+	may be set via the switches -o and -t, and their argument the \`time'
+	string, in the format discussed below. The program uses 24-hour time,
+	thus arguments can be from 0 through 23 for hours, and 0 - 60 for minutes
+	and seconds. The smallest amount of time settable is one second, and
+	other parameters will cause the usage message to be printed and exit.
+
+OPTION SYNOPSIS
+	The timer options are as follows:
+
+	-h
+		Prints the short help.
+
+	-H
+		Prints this long help.
+
+	-o <time>
+		For a timer that is an offset from now.
+		\`countdown -o "1:2:3"' sets a timer for 1 hour,
+		2 minutes, and 3 seconds.
+
+	-t <time>
+		For a timer until a certain time.
+		\`countdown -o "9:30"', when issued at 8:00,
+		sets a timer for 1 hour and 30 minutes;
+		the exact time until 9:30.
+
+	-n <name>
+		For a timer with name \`name' that follows the option.
+		An example would be \`countdown ... -n "Go to bed"'.
+		Using this option will give the timer a name during the countdown,
+		as well as printing that the timer finished by name: both in the
+		terminal and via an Xfce otification (if you are using Xfce,
+		otherwise nothing will happen in your desktop).
+
+TIME STRING FORMAT
+	The format of the \`time' string is a three-field string delimited with
+	either a colon \`:' or space \` '. Each of the three fields corresponds
+	to hours, minutes, and seconds, respectively, and cannot exceed the
+	limit for the given option.
+
+	The field maximum values for each time option is as follows:
+
+	-t
+		-h
+			0 - 23
+		-m
+			0 - 59
+		-s
+			0 - 59
+
+	-o
+		-h
+			0 - 99
+		-m
+			0 - 59
+		-s
+			0 - 59
+
+	Example \`time' strings are:
+
+	-t
+		"12:44:56"
+		"21 43 07"
+		"00:03:43"
+		"08 23 00"
+
+	-o
+		"12:33:56"
+		"21 49 07"
+		"01:03:43"
+		"98 23 10"
+
+NAME STRING
+	The \`name' string can be any string, so long as it is less than 42
+	characters long.
+
+EXAMPLES
+	countdown -t "12:44:56"
+	countdown -t "08 23 00"
+
+	countdown -t "21 43 07" -n "Go to bed"
+	countdown -t "00:03:43" -n "Wake up"
+
+	countdown -o "21 49 07"
+	countdown -o "98 23 10"
+
+	countdown -o "12:33:56" -n "Day to night"
+	countdown -o "01:03:43" -n "A bit more than an hour"
+EOF
+	quit
+}
+
+# Print long usage and exit.
+function usage
+{
+	if [ -n "$1" ]; then
+		cat <<-EOF 1>&2
+		Error: $1
+		Usage: countdown {-h, -H} [{-o, -t} time] {-n name}
+		Use -H for long help.
+		EOF
+	else
+		cat <<-EOF 1>&2
+		Usage: countdown {-h, -H} [{-o, -t} time] {-n name}
+		Use -H for long help.
+		EOF
+	fi
+	quit 1
+}
+
+# Visual alert.
+function play_sound
+{
+
+	[ -z "$NAME" ] && MESSAGE="A countdown timer has finished." \
+		|| MESSAGE="The countdown timer '$NAME' has finished."
+
+	if [ $IN_XFCE ]; then
+		notify-send -u low "$MESSAGE"
+	fi
+
+	echo $MESSAGE
+	aplay $SOUND &> /dev/null
+}
+
+# Add to a time and possibly 'wrap over' to past midnight or noon.
+# Always to be called with 3 arguments: The (clock) time and the (offset)
+# time to add to it, as well as a place (h, m, s), to specify hours,
+# minutes, or seconds.
+function add_times
+{
+	CLOCK=$1
+	shift
+	OFFSET=$1
+	shift
+	PLACE=$1
+
+	PLACE_MAX=0
+
+	if [ "$PLACE" == "h" ]; then
+		PLACE_MAX=24
+	elif [ "$PLACE" == "m" -o "$PLACE" == "s" ]; then
+		PLACE_MAX=60
+	else
+		echo "Bad option to add_times" 1>&2
+		quit 2
+	fi
+
+	let NEW_CLOCK=$CLOCK+$OFFSET
+	[ $NEW_CLOCK -ge $PLACE_MAX ] && let NEW_CLOCK-=$PLACE_MAX
+	echo -n $NEW_CLOCK
+}
+
+# Launch messages.
+function print_info
+{
+	FIN_HOURS=`add_times $HOURS $DEST_HOURS "h"`
+	FIN_MINUTES=`add_times $MINUTES $DEST_MINUTES "m"`
+	FIN_SECONDS=`add_times $SECONDS $DEST_SECONDS "s"`
+
+	[ $FIN_SECONDS -lt $DEST_SECONDS ] && let FIN_MINUTES+=1
+	[ $FIN_MINUTES -lt $DEST_MINUTES ] && let FIN_HOURS+=1
+
+	printf "Running countdown: Started at: %02d:%02d:%02d.\n" \
+		$HOURS $MINUTES $SECONDS
+	printf "Total time: %02d:%02d:%02d, Ends at: %02d:%02d:%02d.\n" \
+		$DEST_HOURS $DEST_MINUTES $DEST_SECONDS \
+		$FIN_HOURS $FIN_MINUTES $FIN_SECONDS
+
+	[ "$MODE" == "-t" ] && echo "Absolute time mode." || echo "Offset mode"
+
+	echo "$SPACER_STR"
+	sleep 1
+	echo -n "|"; sleep 1; tput cuf $SPACER_NUM_OFFSET; echo "|"
+	echo -n "|"; sleep 1; tput cuf $SPACER_NUM_OFFSET; echo "|"
+	echo -n "|"; sleep 1; tput cuf $SPACER_NUM_OFFSET; echo "|"
+	sleep 1
+	echo "$SPACER_STR"
+	sleep 1
+	tput cuu 3
+	sleep 1
+}
+
+# Verifies if a time is in the future or not.
+function verify_time
+{
+	# The times as one big number.
+	TOTAL="`echo -n \"$HOURS$MINUTES$SECONDS\" | \
+		sed 's/^0\+//g'`"
+	DEST_TOTAL="`echo \"$DEST_HOURS$DEST_MINUTES$DEST_SECONDS\" | \
+		sed 's/^0\+//g'`"
+	let DIFFERENCE=$DEST_TOTAL-$TOTAL
+
+	TIME_OK=false
+
+	# Countdown mode: Goes to -1 to display all zeros at the end.
+	[ "$MODE" == "-c" -a "$DEST_TOTAL" != "-1" ] && TIME_OK=true
+
+	# Offset mode.
+	[ "$MODE" == "-o" -a "$DEST_TOTAL" != "0" ] && TIME_OK=true
+
+	# (Absolute) Time mode.
+	[ "$MODE" == "-t" -a "$DIFFERENCE" -gt 0 ] && TIME_OK=true
+}
+
+# 'Subtract' to a time and possibly 'wrap over' to past midnight or noon.
+# Always to be called with 3 arguments: The (clock) time and the (future)
+# time to offset to, as well as a place (h, m, s), to specify hours,
+# minutes, or seconds.
+function time_to_offset
+{
+	CLOCK=$1
+	shift
+	FUTURE=$1
+	shift
+	PLACE=$1
+
+	PLACE_MAX=0
+
+	if [ "$PLACE" == "h" ]; then
+		PLACE_MAX=24
+	elif [ "$PLACE" == "m" -o "$PLACE" == "s" ]; then
+		PLACE_MAX=60
+	else
+		echo "Bad option to add_times" 1>&2
+		quit 2
+	fi
+
+	if [ $FUTURE -ge $CLOCK ]; then
+		let NEW_CLOCK=$FUTURE-$CLOCK
+	else
+		let NEW_CLOCK=($PLACE_MAX-$CLOCK)+$FUTURE
+	fi
+
+	echo -n $NEW_CLOCK
+}
+
+# Counts down a second.
+function step_down
+{
+	if [ $DEST_SECONDS -eq 0 ]; then
+		[ $DEST_MINUTES -ne 0 ] && let DEST_SECONDS=59
+		[ $DEST_MINUTES -ne 0 ] && let DEST_MINUTES-=1
+	fi
+	if [ $DEST_MINUTES -eq 0 ]; then
+		[ $DEST_HOURS -ne 0 ] && let DEST_MINUTES=59
+		[ $DEST_HOURS -ne 0 ] && let DEST_HOURS-=1
+	fi
+
+	let DEST_SECONDS-=1
+}
+
+[ $# -lt 1 ] && usage "Not enough arguments."
+
+# Figure out if this is in xfce (my desktop).
+IN_XFCE=false
+[ -n `which xfce` ] && [ -n "$DISPLAY" ] && IN_XFCE=true
+
+# Parse args from command line.
+MODE=""
+ARGTIME=""
+NAME=""
+while getopts ":o:t:n:hH" OPT; do
+	case $OPT in
+		o)
+			MODE="-o"
+			ARGTIME="$OPTARG"
+			;;
+		t)
+			MODE="-t"
+			ARGTIME="$OPTARG"
+			;;
+		n)
+			NAME="$OPTARG"
+			;;
+		h)
+			usage
+			;;
+		H)
+			long_usage
+			;;
+		\?)
+			usage "Invalid option: -$OPTARG."
+			;;
+		:)
+			usage "-$OPTARG needs an argument."
+			;;
+	esac
+done
+
+# Check the specified time for validity.
+ARGTIME_IS_VALID=false
+
+if echo -n $ARGTIME | grep -q '^[0-9]\{2\}[\: ][0-9]\{2\}[\: ][0-9]\{2\}$'; then
+	HOUR_MAX=0
+	MIN_SEC_MAX=59
+
+	if [ "$MODE" == "-o" ]; then
+		HOUR_MAX=99
+	elif [ "$MODE" == "-t" ]; then
+		HOUR_MAX=23
+	fi
+
+	# Parse ARGTIME into variables.
+	DEST_HOURS="`echo -n $ARGTIME | \
+		sed -e 's/\(^[0-9]\{2\}\).*/\1/' -e 's/^0//'`"
+	DEST_MINUTES="`echo -n $ARGTIME | \
+		sed -e 's/.*[\: ]\([0-9]\{2\}\)[\: ].*/\1/' -e 's/^0//'`"
+	DEST_SECONDS="`echo -n $ARGTIME | \
+		sed -e 's/.*\([0-9]\{2\}$\)/\1/' -e 's/^0//'`"
+
+	# Debug
+	echo "DEBUG: $MODE $DEST_HOURS $DEST_MINUTES $DEST_SECONDS"
+
+	[ $DEST_HOURS -le $HOUR_MAX -a $DEST_MINUTES -le $MIN_SEC_MAX -a \
+		$DEST_SECONDS -le $MIN_SEC_MAX ] && ARGTIME_IS_VALID=true
+fi
+
+if ! $ARGTIME_IS_VALID; then
+	usage "The time string '$ARGTIME' is invalid."
+fi
+
+# Get the current time and strip leading zeros.
+HOURS="`date +'%H' | sed 's/^0*//'`" MINUTES="`date +'%M' | sed 's/^0*//'`"
+SECONDS="`date +'%S' | sed 's/^0*//'`"
+
+# Set variables for the title of the timer to be printed in the terminal.
+[ -z "$NAME" -o ${#NAME} -gt 42 ] && TITLE=" Timer " || TITLE=" $NAME "
+let TITLE_LEN=${#TITLE}+2
+
+let SPACER_NUM=$TITLE_LEN+15
+let SPACER_NUM_OFFSET=$SPACER_NUM-1
+SPACER_CHAR='='
+
+let SPACER_NUM_HALF=$(( ($SPACER_NUM-$TITLE_LEN)/2 ))
+let FIRST_NUM_SPACERS=$(( $SPACER_NUM_HALF+($SPACER_NUM_HALF%2)+1 ))
+let END_NUM_SPACERS=$(( $SPACER_NUM_HALF+($SPACER_NUM_HALF%2) ))
+
+FIRST_SPACERS="+`for i in \`seq 1 $FIRST_NUM_SPACERS\`; do printf \"$SPACER_CHAR\"; done`"
+END_SPACERS="`for i in \`seq 1 $END_NUM_SPACERS\`; do printf \"$SPACER_CHAR\"; done`+"
+
+SPACER_STR="$FIRST_SPACERS$TITLE$END_SPACERS"
+SPACER_LENGTH=${#SPACER_STR}
+
+TIMER_FORMAT="00h:00m:00s"
+TIMER_OFFSET=$(( ($SPACER_NUM-${#TIMER_FORMAT})/2 ))
+
+# The sound for the notification.
+SOUND="$HOME/button-09.wav"
+
+# Set times for `-t'.
+if $TIME_OK && [ "$MODE" == "-t" ]; then
+	DEST_HOURS=`time_to_offset $HOURS $DEST_HOURS "h"`
+	DEST_MINUTES=`time_to_offset $MINUTES $DEST_MINUTES "m"`
+	DEST_SECONDS=`time_to_offset $SECONDS $DEST_SECONDS "s"`
+fi
+
+# tput civis
+tput smcup
+pause -r # press any key to continue, then do carriage return.
+print_info
+
+# For verify_time to verify for a {-c}ountdown, change the mode.
+MODE="-c"
+TIME_OK=false
+verify_time
+
+while $TIME_OK; do
+	tput cuf $TIMER_OFFSET
+	printf "%02dh:%02dm:%02ds.\r" \
+		$DEST_HOURS $DEST_MINUTES $DEST_SECONDS
+
+	step_down
+	verify_time
+	sleep 1
+done
+
+tput cud 4
+play_sound
+pause -r " => Press any key to exit ... "
+quit
+

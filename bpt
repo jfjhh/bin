@@ -1,13 +1,5 @@
 #!/bin/bash
 
-#  bpt.sh
-#  Code
-#
-#  Created by Alex Striff on 2014-02-16.
-#  Uncopyrighted.
-#
-
-
 # Variables.
 POM=0
 WORK=0
@@ -23,7 +15,6 @@ if [[ "$1" == "-w" ]]; then
 elif [[ "$1" == "-b" ]]; then
 	WORK=900 # 15 minutes.
 	BREAK=$2
-
 elif [[ "$1" == "-wb" ]]; then
 	WORK=$2
 	BREAK=$3
@@ -72,14 +63,14 @@ function play_sound() {
 
 [ $IN_XFCE ] && notify-send -u low -t 3000 "A BPT has finished."
 # echo -n  # Visual Bell
-aplay $SOUND /dev/null
+aplay $SOUND &> /dev/null
 
 }
 
 # Launch messages.
 function print_info() {
 
-echo "Running 'bpt.sh': Started at '`date +"%T"`'."
+echo "Running 'bpt': Started at '`date +"%T"`'."
 echo "+====================================================+"
 
 printf "\tWORK:\t\t%03d seconds\t(%02d minutes).\n"\
@@ -100,6 +91,6 @@ print_info
 
 for (( POM=1; POM>-1; POM++ )); do
 	countdown
-	play_sound &> /dev/null &
+	play_sound &
 done
 
