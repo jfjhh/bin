@@ -170,7 +170,18 @@ function manage_time
 
 	verify_time
 	step_down
-	sleep 1
+	#
+	# This constant is derived from extensive testing with a sleep time of 1
+	# second, and accounts for the lag of running all these commands between
+	# each second. By having a shorter sleep time, the execution of 1
+	# second's worth of steps actually takes 1 second, instead of the
+	# experimental result: 1 and 0.00591697929... seconds.
+	#
+	# Times are now roughly estimated to be accurate to the half second.
+	#
+	# sleep 1
+	#
+	sleep 0.994083
 }
 
 # Prints cool binary background
