@@ -89,7 +89,6 @@ done
 tput sgr0
 echo
 tput sc
-tput smcup
 
 tput civis
 tput csr 3 $[ $LINES - 1 ]
