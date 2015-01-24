@@ -3,7 +3,7 @@
 #   It could probably be made more efficent, but speed is not an issue because
 #   an interval between lines is needed to make output more readable.
 
-LOGFILE="/home/pi/jsite/jsite.log"
+LOGFILE="$HOME/projects/jsite/jsite.log"
 BUFFER=`mktemp /tmp/buffer.XXXX`
 RESULTBUF=`mktemp /tmp/resultbuf.XXXX`
 
@@ -34,7 +34,7 @@ function print_list
 			-e 's/\(.*\)\[\(.*\)\]/\1\x1b[0;1;32m\2\x1b[0m\t/'\
 			-e 's/^\([0-9\.]*\) \-/\x1b[0;1;31m\1\x1b[0m\t/g'\
 			-e 's/\-\s//g'\
-			-e 's/.*/\t\t\t\t\t&/'
+			-e 's/.*/\t\t\t&/'
 		sleep $INTERVAL
 	done < $RESULTBUF
 }
@@ -92,8 +92,8 @@ tput sc
 tput smcup
 
 tput civis
-tput csr 2 $[ $LINES - 2 ]
-tput cud 2
+tput csr 3 $[ $LINES - 1 ]
+tput cud 3
 
 ( while :; do [[ "$2" == "-n" ]] && print_list_ext || print_list ; done )
 quit
