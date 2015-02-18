@@ -5,7 +5,7 @@
 # Trap the exit to clean the screen a bit
 function quit
 {
-	if [ "$SCREEN" != "$TTY" ] && !$IMMEDIATE; then
+	if ! $IMMEDIATE && [ "$SCREEN" != "$TTY" ]; then
 		eval "`resize -s $OLD_LINES $OLD_COLUMNS`"
 	fi
 	tput rmcup
@@ -319,9 +319,8 @@ COLOR=$COLOR_MIN
 # Possibly resize the terminal
 SCREEN="`screen -list | grep -o 'pts-[0-9]\+'`"
 TTY="`tty | sed 's/\/dev\///g'`"
-# [ $SPACER_NUM -gt $SPACER_LENGTH ] && WIDTH=$SPACER_NUM || WIDTH=$SPACER_LENGTH
 WIDTH=$SPACER_LENGTH
-if [ "$SCREEN" != "$TTY" ] && !$IMMEDIATE; then
+if ! $IMMEDIATE && [ "$SCREEN" != "$TTY" ]; then
 	OLD_LINES="$LINES"
 	OLD_COLUMNS="$COLUMNS"
 	eval "`resize -s 12 $[WIDTH+2]`"
