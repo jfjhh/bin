@@ -24,44 +24,49 @@ for REPO in $REPOS; do
 	printf " \e[34m<push_repos> \e[0;1mCDing to\t\t\e[0;1;36m$REPO\e[0m...\n"
 	cd $REPO
 
-	START_BRANCH="`git branch --no-color | grep --color=never '\*.*'`"
+	if [ -e ".ignore" ]; then
+		printf " \e[34m<push_repos> Ignoring $REPO\e[0m.\n"
+	else
 
-	for BRANCH in `git branch --no-color | sed -r 's/\*?\s+//'`; do
+		START_BRANCH="`git branch --no-color | grep --color=never '\*.*'`"
 
-		printf " \e[34m<push_repos> \e[0;1mSwitching branch\t\e[0;1;36m$BRANCH\e[0m...\n"
-		git checkout $BRANCH &> /dev/null
+		for BRANCH in `git branch --no-color | sed -r 's/\*?\s+//'`; do
 
-		printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
-		printf "\e[1;35m"
-		git status -s | grep ' '
-		STATUS="$?"
-		printf "\e[0m"
+			printf " \e[34m<push_repos> \e[0;1mSwitching branch\t\e[0;1;36m$BRANCH\e[0m...\n"
+			git checkout $BRANCH &> /dev/null
 
-		if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
-
-			printf " \e[34m<push_repos> \e[0;1mAdding\t\t\e[0;1;36m$REPO Contents\e[0m...\n"
-			printf "\e[1;35m"; git add -Av; printf "\e[0m"
-
-			printf " \e[34m<push_repos> \e[0;1mCommiting\t\t\e[0;1;36m$REPO\e[0m...\n"
-			CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
-			printf "\e[1;35m"; git commit -vm "$CSTR"; printf "\e[0m"
-
-			printf " \e[34m<push_repos> \e[0;1mPushing\t\t\e[0;1;36m$REPO\e[0m...\n"
+			printf " \e[34m<push_repos> \e[0;1mShort status of\t\e[0;1;36m$REPO\e[0m:\n"
 			printf "\e[1;35m"
-
-			git push -v origin master
-			git push -v --tags origin $BRANCH
-
+			git status -s | grep ' '
+			STATUS="$?"
 			printf "\e[0m"
-			printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
-			PUSHED=0
-		else
-			printf " \e[34m<push_repos> \e[0;1mAll good for\t\e[0;1;36m$REPO\e[0m...\n"
-		fi
-	done
 
-	git checkout $START_BRANCH &> /dev/null
-	echo
+			if [[ "$STATUS" == "0" || "$FORCE" == "yes" ]]; then
+
+				printf " \e[34m<push_repos> \e[0;1mAdding\t\t\e[0;1;36m$REPO Contents\e[0m...\n"
+				printf "\e[1;35m"; git add -Av; printf "\e[0m"
+
+				printf " \e[34m<push_repos> \e[0;1mCommiting\t\t\e[0;1;36m$REPO\e[0m...\n"
+				CSTR="auto push_repos (`date "+%m-%d-%y/%T"`)."
+				printf "\e[1;35m"; git commit -vm "$CSTR"; printf "\e[0m"
+
+				printf " \e[34m<push_repos> \e[0;1mPushing\t\t\e[0;1;36m$REPO\e[0m...\n"
+				printf "\e[1;35m"
+
+				git push -v origin master
+				git push -v --tags origin $BRANCH
+
+				printf "\e[0m"
+				printf " \e[34m<push_repos> \e[0;1mDone pushing\t\e[0;1;36m$REPO\e[0m.\n"
+				PUSHED=0
+			else
+				printf " \e[34m<push_repos> \e[0;1mAll good for\t\e[0;1;36m$REPO\e[0m...\n"
+			fi
+		done
+
+		git checkout $START_BRANCH &> /dev/null
+		echo
+	fi
 done
 
 printf "\n"
