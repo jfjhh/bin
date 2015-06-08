@@ -1,0 +1,13 @@
+#!/bin/bash -ex
+
+# Toggles alsamixer master mute.
+
+CUR_MUTE="`amixer get Master | \
+	sed -e '/\[.*\]/!d' -e 's/.*\[\([onf]*\)\].*/\1/' | \
+	head -1`"
+
+[[ "$CUR_MUTE" == "on" ]] && NEW_MUTE="off" || NEW_MUTE="on"
+
+amixer set Master "$NEW_MUTE"
+
+

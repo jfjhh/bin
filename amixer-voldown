@@ -1,0 +1,14 @@
+#!/bin/bash -ex
+
+# Decrements alsamixer master volume (both channels).
+
+CUR_VOLUME="`amixer get Master | \
+	sed -e '/[%]/!d' -e 's/.*\[\([0-9]*\)%\].*/\1/' | \
+	head -1`"
+
+VOLUME_DELTA=5
+
+NEW_VOLUME=$(( $CUR_VOLUME - $VOLUME_DELTA ))
+
+amixer set Master "${NEW_VOLUME}%"
+
