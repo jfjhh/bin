@@ -12,7 +12,8 @@
 
 PUSHED=1
 RUN_DIR=`pwd`
-REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | \
+# REPOS=`find /home/$USER/** /home/$USER/**/** -name '.git' -type d -print | \
+REPOS=`find /home/jfjhh/** /home/jfjhh/**/** -name '.git' -type d -print | \
 	sed 's/\.git//g'`
 FORCE=$1
 
