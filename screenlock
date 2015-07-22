@@ -43,7 +43,8 @@ else
 	done
 
 	# Activate screensaver.
-	xscreensaver-command -activate
+	# xscreensaver-command -activate
+	slock
 
 	# Wait until reactivation of input devices is allowed (calculate
 	# seconds because you can't do $VARm like you could do 1m for 1 minute).
