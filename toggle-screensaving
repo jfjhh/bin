@@ -1,0 +1,16 @@
+#!/bin/bash
+
+FILE="/tmp/.toggle-screensaving"
+
+if [ -f $FILE ]; then
+	xautolock -enable
+	xset s on
+	xset +dpms
+	rm $FILE
+else
+	xautolock -disable
+	xset s off
+	xset -dpms
+	echo "Screensaver OFF" > $FILE
+fi
+
