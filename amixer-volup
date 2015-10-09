@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash
 
 # Increments alsamixer master volume (both channels).
 
@@ -10,5 +10,5 @@ VOLUME_DELTA=5
 
 NEW_VOLUME=$(( $CUR_VOLUME + $VOLUME_DELTA ))
 
-amixer set Master "${NEW_VOLUME}%"
+amixer set Master "${NEW_VOLUME}%" &> /dev/null
 

@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash
 
 # Toggles alsamixer master mute.
 
@@ -8,6 +8,5 @@ CUR_MUTE="`amixer get Master | \
 
 [[ "$CUR_MUTE" == "on" ]] && NEW_MUTE="off" || NEW_MUTE="on"
 
-amixer set Master "$NEW_MUTE"
-
+amixer set Master "$NEW_MUTE" &> /dev/null
 
