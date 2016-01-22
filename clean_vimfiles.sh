@@ -7,6 +7,9 @@
 # Also prunes off files from :mkview if they exist (in ~/.vim/view).
 #
 
+OLD_IFS=$IFS
+IFS=$'\n'
+
 REAL_MKVIEW=""
 REAL_VIMUNDO=""
 DELETED_VIEW=0
@@ -31,7 +34,7 @@ if [ -d "$HOME/.vim/view" ]; then
 	for i in $FILES; do
 		mkview_to_path $i
 		if [ ! -f "${REAL_MKVIEW}" ]; then
-			rm -v "$HOME/.vim/view/${i}" && let DELETED_VIEW++
+			rm -v -- "$HOME/.vim/view/${i}" && let DELETED_VIEW++
 		fi
 	done
 fi
@@ -43,10 +46,12 @@ if [ -d "$HOME/.vimundo" ]; then
 		vimundo_to_path $i
 		if [ ! -f "${REAL_VIMUNDO}" ]; then
 			FILE="`echo ${i} | sed 's/\//\%/g'`"
-			rm -v "$HOME/.vimundo/${i}" && let DELETED_VIMUNDO++
+			rm -v -- "$HOME/.vimundo/${i}" && let DELETED_VIMUNDO++
 		fi
 	done
 fi
 
 echo "$DELETED_VIMUNDO vimundo and $DELETED_VIEW :mkview ghost files deleted."
+
+IFS=$OLD_IFS
 
