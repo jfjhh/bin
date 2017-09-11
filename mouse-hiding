@@ -1,9 +1,0 @@
-#!/bin/sh
-#
-# Use btnx with the "Hiding" configuration. The btnx executable must have the
-# SUID bit set.
-#
-
-/etc/init.d/btnx stop
-/etc/init.d/btnx start Hiding
-
