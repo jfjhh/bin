@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DEVICES="`xinput --list --id-only`"
+
+echo "Disabling input devices."
+for DEV in $DEVICES; do
+	xinput --disable $DEV &> /dev/null
+done
+
+echo "Sleeping."
+[ -n "$1" ] && sleep $1
+
+echo "Enabling input devices."
+for DEV in $DEVICES; do
+	xinput --enable $DEV &> /dev/null
+done
+

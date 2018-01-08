@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TOGGLE_FILE="/tmp/.xcalib_toggle"
+TOGGLE_DISPLAY=":0"
+TOGGLE_SCREEN="1"
+[ -n "$1" ] && TOGGLE_SCREEN="$1"
+
+xcalib -d $TOGGLE_DISPLAY -s $TOGGLE_SCREEN -clear &> /dev/null
+
+if [ -f $TOGGLE_FILE ]; then
+	xcalib -display $TOGGLE_DISPLAY -screen $TOGGLE_SCREEN \
+		-contrast 25 -invert -alter &> /dev/null
+	rm $TOGGLE_FILE
+else
+	touch $TOGGLE_FILE
+fi
+
