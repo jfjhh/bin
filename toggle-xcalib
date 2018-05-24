@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TOGGLE_FILE="/tmp/.xcalib_toggle"
+TOGGLE_FILE="/tmp/xcalib_toggle"
 TOGGLE_DISPLAY=":0"
-TOGGLE_SCREEN="1"
+TOGGLE_SCREEN="0"
 [ -n "$1" ] && TOGGLE_SCREEN="$1"
 
 xcalib -d $TOGGLE_DISPLAY -s $TOGGLE_SCREEN -clear &> /dev/null

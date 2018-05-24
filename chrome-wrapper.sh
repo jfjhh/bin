@@ -13,9 +13,6 @@ printf "\033[0;32mOpening attachment '%s' in Google Chrome.\n\n\033[0;36m" \
 	"$HTML_FILE"
 google-chrome-unstable "$HTML_FILE"
 
-printf "\n\033[0;34mPress any key to continue\033[0;1;32m ... \033[0m"
-read -n1 -s
-
 printf "\n\033[0;33mRemoving temporary file ... \033[0;31m"
 rm -v "$HTML_FILE"
 printf "\033[0m\n"
