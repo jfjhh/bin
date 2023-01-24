@@ -1,4 +1,0 @@
-#!/bin/bash
-
-xcalib -s 0 -clear
-

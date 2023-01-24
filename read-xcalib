@@ -1,5 +1,0 @@
-#!/bin/bash
-
-clear-xcalib
-xcalib -s 0 -co 25 -i -a &> /dev/null
-
